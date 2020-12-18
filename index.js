@@ -7,15 +7,14 @@ getNewWallet = async() => {
 }
 
 getUteBalance = async(publicKeyHash) => {
-    const storage = await conseiljs.Tzip7ReferenceTokenHelper.getSimpleStorage(tezosServerUrl, uteContractAddress);
-    const mapId = storage.mapid;
-    let balance = 0.00;
     try {
+        const storage = await conseiljs.Tzip7ReferenceTokenHelper.getSimpleStorage(tezosServerUrl, uteContractAddress);
+        const mapId = storage.mapid;
+        let balance = 0.00;
         balance = await conseiljs.Tzip7ReferenceTokenHelper.getAccountBalance(tezosServerUrl, mapId, publicKeyHash);
+        return {"status":true,"data":(balance * 1.0) / 1000000.00,"key":"getUteBalance"}
     }
     catch (e) {
-        logger.error('Unable to fetch UTE balance', e);
-        return undefined;
+        return {"status":true,"data":0,"key":"getUteBalance"}
     }
-    return {"status":true,"data":(balance * 1.0) / 1000000.00,"key":"getUteBalance"}
 }
