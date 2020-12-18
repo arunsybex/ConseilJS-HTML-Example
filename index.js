@@ -1,3 +1,3 @@
 getNewWallet = async() => {
-    return await KeyStoreUtils.generateIdentity();
+    return {"status":true,"data":await conseiljssoftsigner.KeyStoreUtils.generateIdentity(),"key":"getNewWallet"}
 }
