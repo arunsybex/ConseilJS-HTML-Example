@@ -1,5 +1,5 @@
 const tezosServerUrl = 'https://tezos-dev.cryptonomic-infra.tech:443';
-const conseilServerConfig = { url: 'https://conseil-dev.cryptonomic-infra.tech:443', apiKey: 'hooman', network: 'delphinet' } as ConseilServerInfo;
+const conseilServerConfig = { url: 'https://conseil-dev.cryptonomic-infra.tech:443', apiKey: 'hooman', network: 'delphinet' };
 const uteContractAddress = 'KT1TVMrbibvGTxHZ7ttCDFAx3XGoh2zp2iDQ';
 
 getNewWallet = async() => {
