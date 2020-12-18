@@ -172,7 +172,8 @@ async function transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, t
     }
 }
 
-async function transferUte(keyStore,toAddress,amount,isTestingCenterUser) {
+async function transferUte(payload) {
+    const { keyStore,toAddress,amount,isTestingCenterUser } = JSON.parse(payload)
     const { fee, gas, freight, networkWait } = conseilServerConfig.network === 'mainnet' ? { fee: FEE_MAINNET, gas: GAS_MAINNET, freight: FREIGHT_MAINNET, networkWait: NETWORKTIME_MAINNET } : { fee: FEE_TESTNET, gas: GAS_TESTNET, freight: FREIGHT_TESTNET, networkWait: NETWORKTIME_TESTNET };
     try {
         const signer = await conseiljssoftsigner.SoftSigner.createSigner(conseiljs.TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
@@ -187,7 +188,7 @@ async function transferUte(keyStore,toAddress,amount,isTestingCenterUser) {
         return {"status":true,"data":true,"key":"transferUte"};
     }
     catch (e) {
-        return {"status":false,"data":e.toString(),"key":"transferUte"};
+        return {"status":false,"data":e,"key":"transferUte"};
     }
     return {"status":false,"data":false,"key":"transferUte"};
 }
