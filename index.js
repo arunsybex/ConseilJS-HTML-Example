@@ -178,11 +178,11 @@ async function transferUte(payload) {
     try {
         const signer = await conseiljssoftsigner.SoftSigner.createSigner(conseiljs.TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         const uteOpId = await conseiljs.Tzip7ReferenceTokenHelper.transferBalance(tezosServerUrl, signer, keyStore, uteContractAddress, fee, keyStore.publicKeyHash, toAddress, amount * 1000000, gas, freight);
-        const uteResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseilServerInfo.network, clearRPCOperationGroupHash(uteOpId), 11, networkWait);
+        const uteResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseiljs.conseilServerInfo.network, clearRPCOperationGroupHash(uteOpId), 11, networkWait);
         if (uteResult['status'] === 'applied') {
             if (isTestingCenterUser) {
                 attempts = 2
-                return {"status":true,"data":await transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, toAddress, 2, fee),"key":"transferUte"};
+                return {"status":true,"data":await transferInitialXtz(tezosServerUrl, conseiljs.conseilServerInfo, keyStore, toAddress, 2, fee),"key":"transferUte"};
             }
         }
         return {"status":true,"data":true,"key":"transferUte"};
