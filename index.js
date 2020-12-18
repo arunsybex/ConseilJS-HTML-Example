@@ -113,7 +113,7 @@ async function getTransactions(userAddress) {
     const transferPattern = new RegExp(`Left[(]Left[(]Left[(]Pair"${addressPattern}"[(]Pair"${addressPattern}"([0-9]+)[))))]`);
 
     newTransactions = newTransactions.map(transaction => {
-        const params = transaction.parameters.replace('/\s/g', '');
+        const params = transaction.parameters.replace(/\s/g, '');
         if (transferPattern.test(params)) {
             try {
                 const parts = params.match(transferPattern);
