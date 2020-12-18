@@ -33,9 +33,9 @@ getTezosBalance = async (publicKeyHash) => {
     let balance = 0;
     try {
         balance = await conseiljs.TezosNodeReader.getSpendableBalanceForAccount(tezosServerUrl, publicKeyHash);
-        return {"status":true,"data":balance,"key":"getUteBalance"}
+        return {"status":true,"data":balance,"key":"getTezosBalance"}
     }
     catch (e) {
-        return {"status":false,"data":0,"key":"getUteBalance"}
+        return {"status":false,"data":0,"key":"getTezosBalance"}
     }
 }
