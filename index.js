@@ -1,5 +1,5 @@
 const serverInfo = {
-    url: 'https://conseil-dev.cryptonomic-infra.tech:443',
+    url: 'https://tezos-dev.cryptonomic-infra.tech:443',
     apiKey: 'hooman'
 };
 
