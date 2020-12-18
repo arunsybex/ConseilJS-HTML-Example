@@ -101,8 +101,8 @@ async function getTokenTransactions(tokenAddress, managerAddress) {
         });
 }
 
-async function getTransactions() {
-    let newTransactions = (await getTokenTransactions("KT1TVMrbibvGTxHZ7ttCDFAx3XGoh2zp2iDQ","tz1gwPkwSvBbiEGnRbnGMaqWedSDksFnKhU1").catch((e) => {
+async function getTransactions(userAddress) {
+    let newTransactions = (await getTokenTransactions(uteContractAddress,userAddress).catch((e) => {
         console.log('-debug: Error in: getSyncAccount -> getTokenTransactions for:' + userAddress);
         console.error(e);
         return {"status":true,"data":[],"key":"getTransactions"}
@@ -127,7 +127,7 @@ async function getTransactions() {
                     direction: parts[1] === userAddress ? 'OUTGOING' : (parts[2] === userAddress ? 'INCOMING' : 'UNKNOWN')
                 };
             } catch (e) {
-                return {"status":true,"data":[],"key":"getTransactions"}
+                console.log(e);
             }
         }
     });
