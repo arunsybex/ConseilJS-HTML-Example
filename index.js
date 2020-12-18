@@ -2,6 +2,17 @@ const tezosServerUrl = 'https://tezos-dev.cryptonomic-infra.tech:443';
 const conseilServerConfig = { url: 'https://conseil-dev.cryptonomic-infra.tech:443', apiKey: 'hooman', network: 'delphinet' };
 const uteContractAddress = 'KT1TVMrbibvGTxHZ7ttCDFAx3XGoh2zp2iDQ';
 
+// Constants
+const TEZOS_INITIAL_BALANCE = 1 * 1000000;
+const FEE_MAINNET = 27000;
+const GAS_MAINNET = 100000;
+const FREIGHT_MAINNET = 100;
+const NETWORKTIME_MAINNET = 61;
+const FEE_TESTNET = 27000;
+const GAS_TESTNET = 100000;
+const FREIGHT_TESTNET = 100;
+const NETWORKTIME_TESTNET = 31;
+
 /**
  * This creates a wallet. The KeyStore object should be saved on device securely.
  * The wallet should be created only once, during the first startup after a fresh install.
@@ -132,4 +143,51 @@ async function getTransactions(userAddress) {
         }
     });
     return {"status":true,"data":newTransactions,"key":"getTransactions"}
+}
+
+/**
+ * Transfers UTE from one wallet to another
+ */
+
+function clearRPCOperationGroupHash(hash) {
+    return hash.replace(/\"/g, '').replace(/\n/, '');
+}
+
+var attempts = 0;
+async function transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, toAddress, attempts, fee){
+    try {
+        const signer = await conseiljssoftsigner.SoftSigner.createSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
+        const xtzOpResult = await conseiljs.TezosNodeWriter.sendTransactionOperation(tezosServerUrl, signer, keyStore, toAddress, TEZOS_INITIAL_BALANCE, fee);
+        const xtzResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseilServerInfo.network, clearRPCOperationGroupHash(xtzOpResult.operationGroupID), 11, conseilServerInfo.network === 'mainnet' ? 61 : 31); // 61 for mainnet
+        if (xtzResult['status'] === 'applied')
+            return true
+        else
+            throw new Error('Operation was not successful');
+    }
+    catch (e) {
+        if (attempts - 1 == 0)
+            return false;
+        else
+            return await transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, toAddress, attempts - 1, fee);
+    }
+}
+
+async function transferUte(keyStore,toAddress,amount,isTestingCenterUser) {
+    const { fee, gas, freight, networkWait } = conseilServerConfig.network === 'mainnet' ? { fee: FEE_MAINNET, gas: GAS_MAINNET, freight: FREIGHT_MAINNET, networkWait: NETWORKTIME_MAINNET } : { fee: FEE_TESTNET, gas: GAS_TESTNET, freight: FREIGHT_TESTNET, networkWait: NETWORKTIME_TESTNET };
+    try {
+        const signer = await conseiljssoftsigner.SoftSigner.createSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
+        const uteOpId = await conseiljs.Tzip7ReferenceTokenHelper.transferBalance(tezosServerUrl, signer, keyStore, uteContractAddress, fee, keyStore.publicKeyHash, toAddress, amount * 1000000, gas, freight);
+        const uteResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseilServerInfo.network, clearRPCOperationGroupHash(uteOpId), 11, networkWait);
+        if (uteResult['status'] === 'applied') {
+            if (isTestingCenterUser) {
+                attempts = 2
+                return {"status":true,"data":await transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, toAddress, 2, fee),"key":"transferUte"};
+            }
+        }
+        return {"status":true,"data":true,"key":"transferUte"};
+    }
+    catch (e) {
+        return {"status":false,"data":false,"key":"transferUte"};
+    }
+    return {"status":false,"data":false,"key":"transferUte"};
 }
