@@ -3,62 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/gh/cryptonomic/conseiljs/dist-web/conseiljs.min.js"
-    integrity="sha384-Y4koW2PhHK4PfHtil6LTWRqMxy3k3ym8AWecTAIuA0cLcJNGFdLmrG2/FXZucfZp"
-    crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/gh/cryptonomic/conseiljs-softsigner/dist-web/conseiljs-softsigner.min.js"
-    integrity="sha384-V1iaajn0x/SMFcZ9Y/xNQmqQSKyll6Dzt27U6OWiv8NdbHTVaHOGHdQ8g0G68HPd"
-    crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./index.css">
-
+    <script src="https://cdn.jsdelivr.net/gh/cryptonomic/conseiljs-softsigner/dist-web/conseiljs-softsigner.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/cryptonomic/conseiljs/dist-web/conseiljs.min.js"></script>
     <title>ConseilJS</title>
   </head>
-  <body>
-    <div class="main-container">
-      <div class="main-header d-flex align-items-center justify-content-between px-3">
-        <div class="main-header-conseil">
-          ConseilJS
-        </div>
-        <div class="main-header-tutorial">
-          HTML tutorial
-        </div>
-      </div>
-      <div class="container">
-        <form class="mt-5">
-          <div class="form-row align-items-center">
-            <div>Show me the hashes of</div>
-            <div class="mx-2">
-              <select class="custom-select" id="order-select">
-                <option value="asc">first</option>
-                <option value="desc">last</option>
-              </select>
-            </div>
-            <div class="block-count">
-              <input type="number" id="limit-input" class="form-control" value="10" >
-            </div>
-            <div class="mx-2">blocks in carthagenet test network.</div>
-            <div>
-              <button type="submit" class="btn btn-primary" onclick="onClickGo(event)">Fetch</button>
-            </div>
-          </div>
-        </form>
-        <div class="row mt-5 output-txt">Results</div>
-        <table class="table" id="query-table">
-          <thead>
-            <tr>
-              <th scope="col">Level</th>
-              <th scope="col">Timestamp</th>
-              <th scope="col">Block Hash</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/gh/cryptonomic/conseiljs/dist-web/conseiljs.min.js"
-        crossorigin="anonymous" type="text/javascript"></script>
-    <script src="./index.js" type="text/javascript"></script>
-  </body>
 </html>
