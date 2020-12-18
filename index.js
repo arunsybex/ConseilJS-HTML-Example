@@ -156,7 +156,7 @@ function clearRPCOperationGroupHash(hash) {
 var attempts = 0;
 async function transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, toAddress, attempts, fee){
     try {
-        const signer = await conseiljssoftsigner.SoftSigner.createSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
+        const signer = await conseiljssoftsigner.SoftSigner.createSigner(conseiljs.TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         const xtzOpResult = await conseiljs.TezosNodeWriter.sendTransactionOperation(tezosServerUrl, signer, keyStore, toAddress, TEZOS_INITIAL_BALANCE, fee);
         const xtzResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseilServerInfo.network, clearRPCOperationGroupHash(xtzOpResult.operationGroupID), 11, conseilServerInfo.network === 'mainnet' ? 61 : 31); // 61 for mainnet
         if (xtzResult['status'] === 'applied')
@@ -175,7 +175,7 @@ async function transferInitialXtz(tezosServerUrl, conseilServerInfo, keyStore, t
 async function transferUte(keyStore,toAddress,amount,isTestingCenterUser) {
     const { fee, gas, freight, networkWait } = conseilServerConfig.network === 'mainnet' ? { fee: FEE_MAINNET, gas: GAS_MAINNET, freight: FREIGHT_MAINNET, networkWait: NETWORKTIME_MAINNET } : { fee: FEE_TESTNET, gas: GAS_TESTNET, freight: FREIGHT_TESTNET, networkWait: NETWORKTIME_TESTNET };
     try {
-        const signer = await conseiljssoftsigner.SoftSigner.createSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
+        const signer = await conseiljssoftsigner.SoftSigner.createSigner(conseiljs.TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         const uteOpId = await conseiljs.Tzip7ReferenceTokenHelper.transferBalance(tezosServerUrl, signer, keyStore, uteContractAddress, fee, keyStore.publicKeyHash, toAddress, amount * 1000000, gas, freight);
         const uteResult = await conseiljs.TezosConseilClient.awaitOperationConfirmation(conseilServerInfo, conseilServerInfo.network, clearRPCOperationGroupHash(uteOpId), 11, networkWait);
         if (uteResult['status'] === 'applied') {
@@ -187,7 +187,7 @@ async function transferUte(keyStore,toAddress,amount,isTestingCenterUser) {
         return {"status":true,"data":true,"key":"transferUte"};
     }
     catch (e) {
-        return {"status":false,"data":false,"key":"transferUte"};
+        return {"status":false,"data":e.toString(),"key":"transferUte"};
     }
     return {"status":false,"data":false,"key":"transferUte"};
 }
